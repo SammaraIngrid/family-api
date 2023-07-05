@@ -5,6 +5,12 @@ class FamiliesController < ApplicationController
     render json: @families
   end
 
+  def show
+    @family = Family.find(params[:id])
+
+    render json: @family
+  end
+
   def create
     @families = Family.new(family_params)
 
@@ -13,12 +19,6 @@ class FamiliesController < ApplicationController
     else
       render json: @families.errors, status: :unprocessable_entity
     end
-  end
-
-  def show 
-    @family = Family.find(params[:id])
-
-    render json: @family
   end
 
   def update
