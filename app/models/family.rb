@@ -3,4 +3,5 @@ class Family < ApplicationRecord
 
   has_many :users
   has_many :parents
+  has_many :grandparents
 end
