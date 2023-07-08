@@ -5,12 +5,12 @@ class UsersController < ApplicationController
   def index
     @users = User.order(created_at: :desc)
 
-    render json: @users
+    render json: @users, include: { family: { include: [:parents, :grandparents] } }, methods: :age
   end
 
   # GET /users/1
   def show
-    render json: @user
+    render json: @user, include: { family: { include: [:parents, :grandparents] } }, methods: :age
   end
 
   # POST /users
