@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_05_214919) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_05_211617) do
   create_table "families", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -28,26 +28,32 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_05_214919) do
   end
 
   create_table "parents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "family_id", null: false
+    t.bigint "mother_id", null: false
+    t.bigint "father_id", null: false
     t.string "name"
     t.string "surname"
     t.date "birthday"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["family_id"], name: "index_parents_on_family_id"
+    t.index ["father_id"], name: "index_parents_on_father_id"
+    t.index ["mother_id"], name: "index_parents_on_mother_id"
   end
 
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "family_id", null: false
+    t.bigint "mother_id", null: false
+    t.bigint "father_id", null: false
     t.string "name"
     t.string "surname"
     t.date "birthday"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["family_id"], name: "index_users_on_family_id"
+    t.index ["father_id"], name: "index_users_on_father_id"
+    t.index ["mother_id"], name: "index_users_on_mother_id"
   end
 
   add_foreign_key "grandparents", "families"
-  add_foreign_key "parents", "families"
-  add_foreign_key "users", "families"
+  add_foreign_key "parents", "grandparents", column: "father_id"
+  add_foreign_key "parents", "grandparents", column: "mother_id"
+  add_foreign_key "users", "parents", column: "father_id"
+  add_foreign_key "users", "parents", column: "mother_id"
 end

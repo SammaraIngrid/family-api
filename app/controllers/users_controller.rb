@@ -5,12 +5,12 @@ class UsersController < ApplicationController
   def index
     @users = User.order(created_at: :desc)
 
-    render json: @users, include: { family: { include: [:parents, :grandparents] } }, methods: :age
+    render_json(@users)
   end
 
   # GET /users/1
   def show
-    render json: @user, include: { family: { include: [:parents, :grandparents] } }, methods: :age
+    render_json(@user)
   end
 
   # POST /users
@@ -46,6 +46,35 @@ class UsersController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def user_params
-    params.permit(:family_id, :name, :surname, :birthday)
+    params.permit(:mother_id, :father_id, :name, :surname, :birthday)
+  end
+
+  def render_json(data)
+    render(
+      json: data,
+      include: [
+        father: {
+          include: [
+            mother: {
+              include: :family
+            },
+            father: {
+              include: :family
+            }
+          ]
+        },
+        mother: {
+          include: [
+            mother: {
+              include: :family
+            },
+            father: {
+              include: :family
+            }
+          ]
+        }
+      ],
+      methods: :age
+    )
   end
 end
